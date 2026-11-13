@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>СтудПомощь — Платформа взаимопомощи студентов</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">🎓 СтудПомощь</div>
+    <nav id="nav-auth"></nav>
+</header>
+
+<div class="container">
+
+    <div id="view-home">
+        <section class="hero-section">
+            <span class="hero-badge">Платформа студенческой взаимопомощи</span>
+            <h1>Помощь с учёбой от студентов вашего колледжа</h1>
+            <p>Разбирайтесь в сложных темах, делитесь знаниями по программированию, математике и профильным модулям вместе с одногруппниками.</p>
+            <div class="hero-buttons">
+                <a href="#catalog" class="btn btn-hero-primary" data-tab="catalog">Перейти в каталог</a>
+                <button type="button" class="btn btn-hero-secondary" data-modal="registerModal">Присоединиться</button>
+            </div>
+        </section>
+
+        <section class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤝</div>
+                <h3>Взаимовыручка</h3>
+                <p>Находите студентов, готовых объяснить сложный материал простым языком или помочь с лабораторной работой.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3>Все предметы колледжа</h3>
+                <p>Удобная фильтрация по учебным дисциплинам и профессиональным модулям вашей специальности.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>Быстрый отклик</h3>
+                <p>Оставляйте отклики в один клик и связывайтесь с авторами заявок напрямую через личный кабинет.</p>
+            </div>
+        </section>
+
+        <section class="steps-section">
+            <h2>Как это работает?</h2>
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-num">1</div>
+                    <h4>Регистрация</h4>
+                    <p>Создайте аккаунт с указанием вашей учебной группы.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">2</div>
+                    <h4>Поиск или заявка</h4>
+                    <p>Найдите подходящую тему в каталоге или создайте свою заявку.</p>
+                </div>
+                <div class="step-item">
+                    <div class="step-num">3</div>
+                    <h4>Общение и результат</h4>
+                    <p>Получайте отклики в профиле и решайте учебные задачи вместе.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div id="view-catalog" style="display: none;">
+        <div class="catalog-header">
+            <h1>Каталог заявок на помощь</h1>
+            <button id="btn-create-trigger" class="btn btn-success" data-modal="createModal" style="display: none;">+ Создать заявку</button>
+        </div>
+
+        <div class="filter-box">
+            <div class="filter-item" style="flex: 2; min-width: 220px;">
+                <label for="filter-search">Поиск (название или описание):</label>
+                <input type="text" id="filter-search" placeholder="Например: PyQt6 или интегралы...">
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-type">Тип заявки:</label>
+                <select id="filter-type">
+                    <option value="">Все типы</option>
+                    <option value="need_help">Нужна помощь</option>
+                    <option value="can_help">Могу помочь</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-category">Предмет (категория):</label>
+                <select id="filter-category">
+                    <option value="0">Все предметы</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-sort-by">Сортировать по:</label>
+                <select id="filter-sort-by">
+                    <option value="created_at">Дате создания</option>
+                    <option value="title">Названию</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="filter-sort-dir">Порядок:</label>
+                <select id="filter-sort-dir">
+                    <option value="DESC">По убыванию (DESC)</option>
+                    <option value="ASC">По возрастанию (ASC)</option>
+                </select>
+            </div>
+
+            <div class="filter-item" style="flex: 0 0 auto;">
+                <a href="#catalog" id="btn-reset-filters" class="btn" style="background: #95a5a6;">Сбросить</a>
+            </div>
+        </div>
+
+        <div id="catalog-grid" class="grid"></div>
+        <div id="catalog-pagination" style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 25px;"></div>
+    </div>
+
+</div>
+
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Вход в систему</h2>
+        <form id="form-login">
+            <input type="email" name="email" placeholder="Ваш Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit" class="btn" style="width: 100%;">Войти</button>
+        </form>
+    </div>
+</div>
+
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Регистрация</h2>
+        <form id="form-register" novalidate>
+            <div class="form-group">
+                <input type="text" name="first_name" placeholder="Имя" required>
+                <small class="field-hint"></small>
+            </div>
+            <div class="form-group">
+                <input type="text" name="last_name" placeholder="Фамилия" required>
+                <small class="field-hint"></small>
+            </div>
+            <div class="form-group">
+                <input type="text" name="group" placeholder="Группа (например: ИСП-341)" required>
+                <small class="field-hint"></small>
+            </div>
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required>
+                <small class="field-hint"></small>
+            </div>
+            <div class="form-group">
+                <input type="password" name="password" placeholder="Пароль (от 6 символов)" required>
+                <small class="field-hint"></small>
+            </div>
+            <button type="submit" class="btn btn-success" style="width: 100%;">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+
+<div id="createModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Создать заявку</h2>
+        <form id="form-ticket">
+            <select id="select-category" name="category_id" required>
+                <option value="">Выберите предмет/категорию</option>
+            </select>
+
+            <select name="type" required>
+                <option value="need_help">Нужна помощь по предмету</option>
+                <option value="can_help">Могу помочь другим студентам</option>
+            </select>
+
+            <input type="text" name="title" placeholder="Краткий заголовок темы" required>
+            <textarea name="description" rows="4" placeholder="Подробно опишите задачу или тему..." required></textarea>
+            <button type="submit" class="btn btn-success" style="width: 100%;">Опубликовать</button>
+        </form>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

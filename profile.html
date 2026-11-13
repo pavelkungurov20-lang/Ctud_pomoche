@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет — СтудПомощь</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <div class="logo">🎓 СтудПомощь</div>
+    <nav id="nav-auth"></nav>
+</header>
+
+<div class="container">
+    <h1>Личный кабинет</h1>
+
+    <!-- 1. Информация о профиле -->
+    <div class="profile-card">
+        <div class="profile-card-header">
+            <h2>Мои данные</h2>
+            <button type="button" id="btn-edit-profile" class="btn">Редактировать</button>
+        </div>
+
+        <!-- Режим просмотра -->
+        <div id="profile-view-mode" class="profile-view-grid">
+            <div class="info-item">
+                <span>Имя и фамилия</span>
+                <b id="view-fullname">—</b>
+            </div>
+            <div class="info-item">
+                <span>Учебная группа</span>
+                <b id="view-group">—</b>
+            </div>
+            <div class="info-item" style="grid-column: 1 / -1;">
+                <span>Электронная почта (Email)</span>
+                <b id="view-email">—</b>
+            </div>
+        </div>
+
+        <!-- Режим редактирования -->
+        <form id="form-profile-edit" class="profile-form-grid" style="display: none;">
+            <div>
+                <label for="prof-first-name">Имя</label>
+                <input type="text" id="prof-first-name" name="first_name" required>
+            </div>
+            <div>
+                <label for="prof-last-name">Фамилия</label>
+                <input type="text" id="prof-last-name" name="last_name" required>
+            </div>
+            <div>
+                <label for="prof-group">Учебная группа</label>
+                <input type="text" id="prof-group" name="group" required>
+            </div>
+            <div>
+                <label for="prof-email">Email</label>
+                <input type="email" id="prof-email" name="email" required>
+            </div>
+            <div style="grid-column: 1 / -1; display: flex; gap: 10px; margin-top: 5px;">
+                <button type="submit" class="btn btn-success">Сохранить изменения</button>
+                <button type="button" id="btn-cancel-profile" class="btn" style="background: #95a5a6;">Отмена</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 2. Смена пароля -->
+    <div class="profile-card">
+        <h2>Безопасность и пароль</h2>
+        <form id="form-change-password" class="profile-form-grid">
+            <div style="grid-column: 1 / -1;">
+                <label for="old-password">Текущий пароль</label>
+                <input type="password" id="old-password" name="old_password" placeholder="Введите текущий пароль" required>
+            </div>
+            <div>
+                <label for="new-password">Новый пароль (минимум 6 символов)</label>
+                <input type="password" id="new-password" name="new_password" placeholder="Придумайте новый пароль" required>
+            </div>
+            <div>
+                <label for="confirm-password">Повторите новый пароль</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Повторите новый пароль" required>
+            </div>
+            <div style="grid-column: 1 / -1;">
+                <button type="submit" class="btn">Обновить пароль</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- 3. Входящие отклики на заявки пользователя -->
+    <div id="incoming-section" class="profile-card" style="display: none;">
+        <h2>📩 Входящие отклики на мои заявки</h2>
+        <div id="incoming-grid" class="grid"></div>
+    </div>
+
+    <!-- 4. Исходящие отклики пользователя -->
+    <div id="outgoing-section" class="profile-card" style="display: none;">
+        <h2>📤 Мои отклики на чужие заявки</h2>
+        <div id="outgoing-grid" class="grid"></div>
+    </div>
+
+    <!-- 5. Таблица собственных заявок -->
+    <div class="profile-card">
+        <div class="profile-card-header">
+            <h2>Мои заявки</h2>
+            <span style="font-size: 13px; color: #7f8c8d;">Нажмите на строку для редактирования</span>
+        </div>
+        <div class="table-wrapper">
+            <table class="offers-table">
+                <thead>
+                    <tr>
+                        <th>Предмет</th>
+                        <th>Заголовок</th>
+                        <th>Создано</th>
+                        <th>Обновлено</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody id="my-offers-tbody">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: #7f8c8d;">Загрузка...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно редактирования заявки -->
+<div id="editOfferModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Редактирование заявки</h2>
+        <form id="form-edit-offer">
+            <input type="hidden" id="edit-offer-id" name="offer_id">
+
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px;">Предмет / категория:</label>
+            <select id="edit-offer-category" name="category_id" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;"></select>
+
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px;">Тип заявки:</label>
+            <select id="edit-offer-type" name="type" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="need_help">Нужна помощь</option>
+                <option value="can_help">Могу помочь</option>
+            </select>
+
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px;">Заголовок:</label>
+            <input type="text" id="edit-offer-title" name="title" required>
+
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px;">Описание:</label>
+            <textarea id="edit-offer-desc" name="description" rows="4" required></textarea>
+
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #7f8c8d; margin-bottom: 5px;">Статус:</label>
+            <select id="edit-offer-status" name="status" style="width: 100%; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="open">Активно (открыто в каталоге)</option>
+                <option value="closed">Закрыто (скрыто из каталога)</option>
+            </select>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn btn-success" style="flex: 1;">Сохранить</button>
+                <button type="button" id="btn-delete-offer" class="btn btn-danger">Удалить</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
